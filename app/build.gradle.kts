@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    kotlin("kapt")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -66,8 +67,11 @@ dependencies {
     implementation("androidx.activity:activity-ktx:$activity_ktx_version")
 
     // dependency injection - Dagger Hilt
-    val di_version = "2.43.2"
+    val di_version = "2.48"
     implementation("com.google.dagger:hilt-android:$di_version")
-    kapt("com.google.dagger:hilt-compiler:$di_version")
+    kapt("com.google.dagger:hilt-android-compiler:$di_version")
+}
 
+kapt {
+    correctErrorTypes = true
 }

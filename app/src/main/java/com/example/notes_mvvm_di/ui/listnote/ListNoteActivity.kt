@@ -3,32 +3,30 @@ package com.example.notes_mvvm_di.ui.listnote
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.notes_mvvm_di.AppDatabase
-import com.example.notes_mvvm_di.R
 import com.example.notes_mvvm_di.data.model.Note
 import com.example.notes_mvvm_di.databinding.ActivityListBinding
 import com.example.notes_mvvm_di.listener.OnNoteClickListener
-import com.example.notes_mvvm_di.repository.NoteRepository
 import com.example.notes_mvvm_di.ui.addnote.AddNoteActivity
 import com.example.notes_mvvm_di.viewmodel.NoteViewModel
-import com.example.notes_mvvm_di.viewmodel.NoteViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ListNoteActivity : AppCompatActivity() {
     private val binding by lazy { ActivityListBinding.inflate(layoutInflater) }
-    private lateinit var noteViewModel: NoteViewModel
+    private val noteViewModel: NoteViewModel by viewModels()
     private lateinit var adapter: ListNoteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        setupViewModel()
-
         adapter = ListNoteAdapter(applicationContext, object: OnNoteClickListener {
             override fun onDelete(note: Note) {
-                TODO("Not yet implemented")
+                noteViewModel.delete(note)
+                Toast.makeText(applicationContext, note.title, Toast.LENGTH_SHORT).show()
             }
 
         })
@@ -47,12 +45,5 @@ class ListNoteActivity : AppCompatActivity() {
                 adapter.updateList(it)
             }
         }
-    }
-
-    private fun setupViewModel() {
-        val noteRepository = NoteRepository(AppDatabase.getInstance(applicationContext))
-        val viewModelProvideFactory = NoteViewModelFactory(noteRepository)
-
-        noteViewModel = ViewModelProvider(this, viewModelProvideFactory).get(NoteViewModel::class.java)
     }
 }

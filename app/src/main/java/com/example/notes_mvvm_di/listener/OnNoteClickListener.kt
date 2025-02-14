@@ -4,4 +4,5 @@ import com.example.notes_mvvm_di.data.model.Note
 
 interface OnNoteClickListener {
     fun onDelete(note: Note)
+//    fun onEdit(note: Note)
 }

@@ -2,24 +2,21 @@ package com.example.notes_mvvm_di.ui.addnote
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.notes_mvvm_di.AppDatabase
 import com.example.notes_mvvm_di.data.model.Note
 import com.example.notes_mvvm_di.databinding.ActivityAddBinding
-import com.example.notes_mvvm_di.repository.NoteRepository
 import com.example.notes_mvvm_di.viewmodel.NoteViewModel
-import com.example.notes_mvvm_di.viewmodel.NoteViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddNoteActivity: AppCompatActivity() {
     private val binding by lazy { ActivityAddBinding.inflate(layoutInflater) }
-    private lateinit var noteViewModel: NoteViewModel
+    private val noteViewModel: NoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        setupViewModel()
 
         binding.imgCheck.setOnClickListener {
             val title = binding.etTitle.text.toString()
@@ -33,12 +30,5 @@ class AddNoteActivity: AppCompatActivity() {
                 finish()
             }
         }
-    }
-
-    private fun setupViewModel() {
-        val noteRepository = NoteRepository(AppDatabase.getInstance(applicationContext))
-        val viewModelProvideFactory = NoteViewModelFactory(noteRepository)
-
-        noteViewModel = ViewModelProvider(this, viewModelProvideFactory).get(NoteViewModel::class.java)
     }
 }
